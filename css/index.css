@@ -1,26 +1,29 @@
 * {
-    font-family: "MS PGothic";
-    background-color: #dad6d0;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
+    font-family: "Agency FB";
+    background-color: #bfc3c2;
 }
 
 body {
     text-align:center;
 }
+
 .post-adding {
     margin: 0 auto;
     width: 41%;
     padding: 5% 0 0 0;
+}
 
-}
-.add-subject, .add-text, .add-btn, .add-checkRule {
+.add-subject, .add-message, .add-btn, .checkRule {
+    background-color: #ffffff;
     display: block;
-    margin: 0 0 5px 0;
-    padding: 2.5%;
-    width: 94%;
-    border: 0.2px solid rgba(0, 89, 181, 0.82);
+    margin: 0 auto;
+    padding: 4.5%;
+    width: 60%;
+    border: 0.2px solid rgba(29, 4, 5, 0.94);
 }
+
 .add-checkRule {
     border: none;
     font-size: 12px;
@@ -29,15 +32,14 @@ body {
     box-sizing: content-box;
     color: #FFF;
     text-transform: uppercase;
-    background: #007ddc;
-
+    background: #1d0405;
 }
 .add-btn:disabled {
     background: #CCC;
     color: #999;
 }
 
-.add-text {
+.add-message {
     resize: none;
 }
 
@@ -50,7 +52,7 @@ body {
 }
 
 .menu li{
-    background: #007DDC;
+    background: #1d0405;
     padding: 2%;
     list-style: none;
     display: inline;
@@ -66,4 +68,18 @@ body {
     border: 0;
     font-size: large;
     text-decoration: none;
+}
+
+.publication {
+    padding: 3%;
+}
+
+.counter {
+    padding-bottom: 20px;
+    font-size: 20px;
+    position: static;
+}
+
+.post-subject {
+    float:left;
 }
