@@ -1,0 +1,69 @@
+* {
+    font-family: "MS PGothic";
+    background-color: #dad6d0;
+    margin:0;
+    padding:0;
+}
+
+body {
+    text-align:center;
+}
+.post-adding {
+    margin: 0 auto;
+    width: 41%;
+    padding: 5% 0 0 0;
+
+}
+.add-subject, .add-text, .add-btn, .add-checkRule {
+    display: block;
+    margin: 0 0 5px 0;
+    padding: 2.5%;
+    width: 94%;
+    border: 0.2px solid rgba(0, 89, 181, 0.82);
+}
+.add-checkRule {
+    border: none;
+    font-size: 12px;
+}
+.add-btn {
+    box-sizing: content-box;
+    color: #FFF;
+    text-transform: uppercase;
+    background: #007ddc;
+
+}
+.add-btn:disabled {
+    background: #CCC;
+    color: #999;
+}
+
+.add-text {
+    resize: none;
+}
+
+
+.menu {
+    min-width: 40%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1%;
+}
+
+.menu li{
+    background: #007DDC;
+    padding: 2%;
+    list-style: none;
+    display: inline;
+}
+
+.menu li a {
+    background-image: none;
+    background: #007DDC;
+    color: #ffff;
+    cursor: pointer;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0);
+    border: 0;
+    font-size: large;
+    text-decoration: none;
+}

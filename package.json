@@ -1,0 +1,10 @@
+{
+  "name": "BlogReact",
+  "version": "0.0.1",
+  "dependencies": {
+    "axios": "^0.17.1"
+  },
+  "devDependencies": {
+    "express": "^4.16.2"
+  }
+}
