@@ -1,17 +1,21 @@
 'use strict';
 
-// This works on all devices/browsers, and uses IndexedDBShim as a final fallback
-let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+if (window.openDatabase) {
+    //Create the database the parameters are 1. the database name 2.version number 3. a description 4. the size of the database (in bytes) 1024 x 1024 = 1MB
+    let mydb = openDatabase("blog_db", "0.1", "A Database of Blog", 1024 * 1024);
 
-// Open (or create) the database
-let open = indexedDB.open("MyDatabase", 1);
+    //create the cars table using SQL for the database using a transaction
+    mydb.transaction(function (t) {
+        t.executeSql("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY ASC, subject TEXT, message TEXT)");
+    });
+
+
+
+} else {
+    alert("WebSQL is not supporting by your browser!");
+}
 
 // Create the schema
-open.onupgradeneeded = function() {
-    let db = open.result;
-    let store = db.createObjectStore("MyObjectStore", {keyPath: "id"});
-    let index = store.createIndex("NameIndex", ["name.last", "name.first"]);
-};
 
 
 class MessageController {
@@ -121,40 +125,111 @@ let Publication = React.createClass({
 });
 
 open.onsuccess = function() {
-    // Start a new transaction
+    // // Start a new transaction
+    // let db = open.result;
+    // let tx = db.transaction("MyObjectStore", "readwrite");
+    // let store = tx.objectStore("MyObjectStore");
+    // let index = store.index("NameIndex");
+    //
+    // // Add some data
+    // store.put({id: 12345, name: {first: {subject}, last: [message]}, age: 42});
+    // store.put({id: 67890, name: {first: "Bob", last: "Smith"}, age: 35});
+    //
+    // // Query the data
+    // let getJohn = store.get(12345);
+    // let getBob = index.get(["Smith", "Bob"]);
+    //
+    // getJohn.onsuccess = function() {
+    //     console.log(getJohn.result.name.first);  // => "John"
+    // };
+    //
+    // getBob.onsuccess = function() {
+    //     console.log(getBob.result.name.first);   // => "Bob"
+    // };
+
+    // Close the db when the transaction is done
+
+    //DO NOT CLOSE THE CONNECTION
+
+    // tx.oncomplete = function() {
+    //     db.close();
+    // };
+};
+/*
+function addRecordToDatabase(record, onsuccess, onerror) {
+    console.log('adding record to database', JSON.stringify(record));
     let db = open.result;
     let tx = db.transaction("MyObjectStore", "readwrite");
     let store = tx.objectStore("MyObjectStore");
-    let index = store.index("NameIndex");
+    store.add(record);
 
-    // Add some data
-    store.put({id: 12345, name: {first: {subject}, last: [message]}, age: 42});
-    store.put({id: 67890, name: {first: "Bob", last: "Smith"}, age: 35});
-
-    // Query the data
-    let getJohn = store.get(12345);
-    let getBob = index.get(["Smith", "Bob"]);
-
-    getJohn.onsuccess = function() {
-        console.log(getJohn.result.name.first);  // => "John"
+    tx.oncomplete = () => {
+        console.log('transaction complete');
+        onsuccess();
     };
 
-    getBob.onsuccess = function() {
-        console.log(getBob.result.name.first);   // => "Bob"
+    tx.onerror = (error) => {
+        console.log('transaction error', error.target.error)
+        onerror();
     };
+}
 
-    // Close the db when the transaction is done
-    tx.oncomplete = function() {
-        db.close();
-    };
-};
+function getRecordFromDatabase(id, result) {
+    console.log('seeking for object with id=', id);
+    let db = open.result;
+    let tx = db.transaction("MyObjectStore", "readwrite");
+    let store = tx.objectStore("MyObjectStore");
 
-let subject = Publication.subject;
-let message = Publication.message;
+    let getRecord = store.get(id);
 
+    getRecord.onsuccess = () => {
+        result(getRecord.result)
+    }
+}
 
+//JUST COPYPASTED
+function generateUUID() {
+    let dt = new Date().getTime();
+    let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        let r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c =='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
+*/
+
+class testStorage {
+
+    addBlog(first, second) {
+        let myDB = openDatabase("blog_db", "0.1", "A Database of Blog", 1024 * 1024);
+        if(!myDB) {
+            return (
+                myDB.transaction(function (t) {
+                t.executeSql("INSERT INTO posts (subject, message) VALUES (? ?)", [first, second]);
+            })
+            )
+        }
+    }
+    outputBlog() {
+        let myDB = openDatabase("blog_db", "0.1", "A Database of Blog", 1024 * 1024);
+        myDB.transaction(function (t) {
+            t.executeSql("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY ASC, subject TEXT, message TEXT)");
+        });
+        if (myDB) {
+            return(
+                myDB.transaction(function (t) {
+                    t.executeSql("SELECT * FROM posts", []);
+                })
+            )
+        }
+    }
+}
+
+let test = new testStorage();
 
 let AddPost = React.createClass({
+
    getInitialState: function() {
        return {
            agreeNotChecked: true,
@@ -166,26 +241,15 @@ let AddPost = React.createClass({
        ReactDOM.findDOMNode(this.refs.subject).focus();
    },
    onBtnClickHandler: function(e) {
-       e.preventDefault();
-       put({id: 6789012, name: {first: "Bob", last: "Smith"}, age: 35});
-       let getKek = store.get(6789012);
-       getKek.onsuccess = function() {
-           console.log(getKek.result.name.first);  // => "John"
-       };
-       /*let textEl = ReactDOM.findDOMNode(this.refs.message);
-
        let subject = ReactDOM.findDOMNode(this.refs.subject).value;
-       let message = textEl.value;
-
-       let item = [{
-           subject: subject,
-           message: message,
-       }];
-       window.ee.emit('Posts.add', item);
-
-       textEl.value = '';
-       this.setState({textIsEmpty: true});*/
-   },
+       let message = ReactDOM.findDOMNode(this.refs.message).value;
+       e.preventDefault();
+       console.log('clicked');
+       test.addBlog({subject}, {message});
+       console.log({subject}, {message});
+       console.log(test.outputBlog());
+   }
+   ,
    onCheckRuleClick: function(e) {
        this.setState({agreeNotChecked: !this.state.agreeNotChecked});
    },
